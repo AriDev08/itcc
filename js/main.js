@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("img");
     card.src = src;
     card.style.position = "absolute";
-    card.style.top = "56%";
+    card.style.top = "51%";
     card.style.left = "50%";
     const extraOffset = (i === 2 || i === 3) ? 1 : 0;
     card.style.transform = `translate(-50%, -50%) translateY(${extraOffset}px)`;
@@ -80,6 +80,7 @@ function finishLoading() {
     ease: "power4.in",
     onComplete: () => {
       loadingScreen.remove();
+      ScrollTrigger.refresh();
       animateCards();
     }
   });
@@ -108,7 +109,7 @@ function finishLoading() {
 
     gsap.to(".logo2 img", {
       y: -100,
-      delay: 0.5,
+      delay: 2,
       duration: 2,
       ease: "power2.out"
     });
@@ -152,7 +153,7 @@ function finishLoading() {
         y: 200,
         duration: 2
       });
-
+    
       const tl1 = gsap.timeline({
         scrollTrigger: {
           trigger: ".hero",
@@ -162,7 +163,7 @@ function finishLoading() {
           markers: false
         }
       });
-
+    
       tl1.to(".hero p", { opacity: 0 })
         .to(images, {
           duration: 1.2,
@@ -180,46 +181,117 @@ function finishLoading() {
           y: 520,
           ease: "expo.inOut"
         }, "+=0.2");
-    }
+    
+      // Animasi Role Cards
+      const cards2 = gsap.utils.toArray('.card2');
+      const tl2 = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.role',
+          start: 'top+=400 bottom',
+          end: 'bottom bottom',
+          scrub: 1,
+          // markers: true,
+        },
+        defaults: { duration: 0.6, ease: 'power2.out' }
+      });
+    
+      tl2.from(cards2, {
+        y: -600,
+        scale: 0.3,
+        opacity: 0,
+        duration: 2,
+        ease: 'power4.out',
+        stagger: 0.15
+      }, 0);
+    
+      tl2.to(cards2, {
+        x: (i) => (i - (cards2.length - 1) / 2) * 345,
+        stagger: 0.15
+      }, '+=0.2');
+    
+      tl2.to(cards2, {
+        rotationY: 180,
+        transformOrigin: 'center center',
+        stagger: 0.15
+      }, '+=0.2');
+    
+      tl2.from(".wrapper_role h1 span", {
+        y: 100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out"
+      });
+    
+      // Animasi Cyber Security Section
+      const tl3 = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.cyber-scurity',
+          start: 'top center',
+          end: 'top+=500 center',
+          scrub: 1,
+          // markers: true
+        }
+      });
+    
+      tl3.from(".wrapper h1 span", {
+        y: 100,
+        opacity: 0,
+        scale: 1.5,
+        filter: "blur(6px)",
+        color: "#00ffff",
+        stagger: {
+          each: 0.06,
+          from: "random"
+        },
+        ease: "expo.out",
+        duration: 1.5
+      });
+      tl3.fromTo(".qna-item", 
+        {
+          opacity: 0,
+          y: 80,
+          rotateX: 45,
+          transformOrigin: "top center",
+          filter: "blur(4px)",
+          scale: 0.9,
+        }, 
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          filter: "blur(0px)",
+          scale: 1,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+          duration: 1
+        }
+      );
+    }      
+  }});
+  const items = document.querySelectorAll(".autoBlur");
 
-    const cards2 = gsap.utils.toArray('.card2');
-    const tl2 = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.role',
-        start: 'top+=400 bottom',
-        end: 'bottom bottom',
-        scrub: 1,
-        markers: true,
-      },
-      defaults: { duration: 0.6, ease: 'power2.out' }
+  items.forEach((el) => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 50%",
+      end: "bottom 50%",
+      onEnter: () => setActive(el),
+      onEnterBack: () => setActive(el),
+      onLeave: () => unsetActive(el),
+      onLeaveBack: () => unsetActive(el),
+      // markers: true
     });
-
-    tl2.from(cards2, {
-      y: -600,
-      scale: 0.3,
-      opacity: 0,
-      duration: 2,
-      ease: 'power4.out',
-      stagger: 0.15
-    }, 0);
-
-    tl2.to(cards2, {
-      x: (i) => (i - (cards2.length - 1) / 2) * 345,
-      stagger: 0.15
-    }, '+=0.2');
-
-    tl2.to(cards2, {
-      rotationY: 180,
-      transformOrigin: 'center center',
-      stagger: 0.15
-    }, '+=0.2');
-
-    tl2.from(".wrapper_role h1 span", {
-      y: 100,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: "power3.out"
+  });
+  
+  function setActive(activeEl) {
+    document.querySelectorAll(".autoBlur").forEach(el => {
+      el.classList.remove("active");
     });
+    activeEl.classList.add("active");
   }
-});
+  
+  function unsetActive(el) {
+    el.classList.remove("active");
+  }
+  
