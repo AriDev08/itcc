@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio SPA</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .center-name {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .viewport {
+      position: absolute;
+      width: 3000px;
+      height: 2000px;
+      transition: transform 0.1s linear;
+    }
+
+    .portfolio-item {
+      width: 200px;
+      height: 120px;
+      background-color: #ccc;
+      border: 2px solid white;
+      position: absolute;
+      transition: transform 0.3s;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .portfolio-item:hover {
+      transform: scale(1.1);
+      z-index: 5;
+    }
+
+    .detail-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #111;
+      color: white;
+      padding: 40px;
+      z-index: 20;
+      overflow-y: auto;
+    }
+
+    .detail-page img.profile {
+      width: 150px;
+      height: 150px;
+      border-radius: 100%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 4px solid white;
+    }
+
+    .projects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .project-card {
+      width: 250px;
+      background: #222;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .project-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: white;
+      background: #333;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="center-name" id="centerName">ARI SANTIKA</div>
+  <div class="viewport" id="viewport"></div>
+
+  <!-- Detail Page -->
+  <div class="detail-page" id="detailPage">
+    <div class="back-btn" onclick="goBack()">← Kembali</div>
+    <div style="text-align: center;">
+      <img id="detailPhoto" class="profile" src="" alt="Foto Profil">
+      <h1 id="detailTitle"></h1>
+    </div>
+    <div class="projects" id="projectList"></div>
+  </div>
+
+  <script>
+    const viewport = document.getElementById('viewport');
+    const centerName = document.getElementById('centerName');
+    const detailPage = document.getElementById('detailPage');
+    const detailTitle = document.getElementById('detailTitle');
+    const detailPhoto = document.getElementById('detailPhoto');
+    const projectList = document.getElementById('projectList');
+
+    const owners = [
+      {
+        name: "KOMEX",
+        slug: "KOMEX",
+        photo: "https://randomuser.me/api/portraits/men/11.jpg",
+        projects: [
+          { title: "Music Festival Poster", image: "https://picsum.photos/id/237/400/250" },
+          { title: "Urban Art", image: "https://picsum.photos/id/238/400/250" }
+        ]
+      },
+      {
+        name: "Andra",
+        slug: "Andra",
+        photo: "https://randomuser.me/api/portraits/men/11.jpg",
+        projects: [
+          { title: "Music Festival Poster", image: "https://picsum.photos/id/237/400/250" },
+          { title: "Urban Art", image: "https://picsum.photos/id/238/400/250" }
+        ]
+      },
+      {
+        name: "denys",
+        slug: "denys",
+        photo: "https://randomuser.me/api/portraits/men/11.jpg",
+        projects: [
+          { title: "Music Festival Poster", image: "https://picsum.photos/id/237/400/250" },
+          { title: "Urban Art", image: "https://picsum.photos/id/238/400/250" }
+        ]
+      },
+      
+      {
+        name: "dywa",
+        slug: "dywa",
+        photo: "https://randomuser.me/api/portraits/women/22.jpg",
+        projects: [
+          { title: "Children App UI", image: "https://picsum.photos/id/239/400/250" },
+          { title: "E-Learning Dashboard", image: "https://picsum.photos/id/240/400/250" }
+        ]
+      }
+    ];
+
+    function renderPortfolio() {
+      owners.forEach((data) => {
+        const div = document.createElement('div');
+        div.className = 'portfolio-item';
+
+        div.dataset.name = data.name;
+        div.dataset.slug = data.slug;
+        div.style.backgroundImage = `url('${data.photo}')`;
+
+        div.style.top = `${Math.random() * 1800}px`;
+        div.style.left = `${Math.random() * 2800}px`;
+
+        div.addEventListener('mouseenter', () => {
+          centerName.textContent = data.name;
+        });
+
+        div.addEventListener('mouseleave', () => {
+          centerName.textContent = 'ARI SANTIKA';
+        });
+
+        div.addEventListener('click', () => {
+          history.pushState({}, '', `?name=${data.slug}`);
+          showDetail(data.slug);
+        });
+
+        viewport.appendChild(div);
+      });
+    }
+
+    function showDetail(slug) {
+      const data = owners.find(item => item.slug === slug);
+      if (!data) return;
+
+      detailTitle.textContent = data.name;
+      detailPhoto.src = data.photo;
+
+      // Clear & render projects
+      projectList.innerHTML = '';
+      data.projects.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.title}">
+          <h4>${p.title}</h4>
+        `;
+        projectList.appendChild(card);
+      });
+
+      viewport.style.display = 'none';
+      centerName.style.display = 'none';
+      detailPage.style.display = 'block';
+    }
+
+    function goBack() {
+      history.pushState({}, '', '/');
+      detailPage.style.display = 'none';
+      viewport.style.display = 'block';
+      centerName.style.display = 'block';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('name');
+      if (slug) showDetail(slug);
+    });
+
+    window.addEventListener('popstate', () => {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('name');
+      if (slug) {
+        showDetail(slug);
+      } else {
+        goBack();
+      }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      const maxX = 3000 - window.innerWidth;
+      const maxY = 2000 - window.innerHeight;
+      const moveX = -x * maxX;
+      const moveY = -y * maxY;
+      viewport.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+
+    renderPortfolio();
+  </script>
+</body>
+</html>

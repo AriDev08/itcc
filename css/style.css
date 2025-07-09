@@ -359,6 +359,139 @@ h1 span {
 }
 
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.karir {
+  display: flex;
+}
+
+.karir .container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.container-title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  padding: 6px 12px;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.karir .container:nth-child(1) { background: #222; }
+.karir .container:nth-child(2) { background: #1b1b1b; }
+.karir .container:nth-child(3) {
+  background: url('https://images.unsplash.com/photo-1527443224154-dfa162e4b1d8') no-repeat center / cover;
+}
+
+.image-float {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  z-index: 2;
+}
+
+.image-float img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.binary-person {
+  position: absolute;
+  bottom: 0;
+  left: 70%;
+  transform: translateX(-50%);
+  max-height: 90%;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.zigzag-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 2;
+}
+
+.chart-box {
+  position: absolute;
+  width: 300px;
+  height: 160px;
+  background: #e5e5e5;
+  border-radius: 8px;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transform: rotate(320deg);
+}
+
+.chart-box.log1 { top: 35%; left: -6rem; }
+.chart-box.log2 { top: 0%; right: -2rem; }
+.chart-box.log3 { bottom: 0%; left: -6rem; }
+.chart-box.log4 { bottom: 35%; right: -2rem; }
+
+.overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.binary {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  color: #0f0;
+  font-size: 12px;
+  line-height: 14px;
+  white-space: pre;
+  overflow: hidden;
+  opacity: 0;
+  z-index: 3;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.list {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  list-style: none;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.8;
+}
+
 @media (max-width: 768px) {
   .burger {
     display: block;
